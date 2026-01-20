@@ -8,6 +8,8 @@ import rateLimit from "express-rate-limit";
 // Import routes
 import authRoutes from "./routes/auth.route.js";
 import habitRoutes from "./routes/habit.route.js";
+import taskRoutes from "./routes/task.route.js";
+import dailyPlannerRoutes from "./routes/dailyPlanner.route.js";
 
 // Import middleware
 import { errorHandler } from "./middlewares/errorHandler.middleware.js";
@@ -93,6 +95,8 @@ app.get("/health", (req, res) => {
 // API Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/habits", habitRoutes);
+app.use("/api/tasks", taskRoutes);
+app.use("/api/daily-planner", dailyPlannerRoutes);
 
 // 404 handler
 app.use((req, res) => {
