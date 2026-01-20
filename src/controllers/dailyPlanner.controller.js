@@ -1,4 +1,5 @@
 import { Task } from "../models/task.model.js";
+import { DayNote } from "../models/dayNote.model.js";
 
 // Helper function to check if a date matches a recurring pattern
 const matchesRecurringPattern = (date, parentDate, pattern) => {
@@ -137,6 +138,12 @@ export const getDailyPlanner = async (req, res, next) => {
     })
       .sort({ createdAt: -1 });
 
+    // Get day note for this date
+    const dayNote = await DayNote.findOne({
+      userId,
+      date: { $gte: startOfDay, $lte: endOfDay },
+    });
+
     res.status(200).json({
       success: true,
       date: startOfDay.toISOString(),
@@ -160,6 +167,16 @@ export const getDailyPlanner = async (req, res, next) => {
         reminder: task.reminder || { enabled: false, reminderTime: null },
         duration: task.duration || null,
       })),
+      dayNote: dayNote
+        ? {
+            _id: dayNote._id.toString(),
+            date: dayNote.date.toISOString(),
+            note: dayNote.note || "",
+            reflection: dayNote.reflection || "",
+            createdAt: dayNote.createdAt.toISOString(),
+            updatedAt: dayNote.updatedAt.toISOString(),
+          }
+        : null,
     });
   } catch (error) {
     next(error);
